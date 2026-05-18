@@ -157,7 +157,7 @@ function History() {
               <div className="flex gap-4 mt-8">
 
                 <a
-                  href={`http://localhost:5000/uploads/${report.pdfFile}`}
+                  href={`http://localhost:5000/${report.generatedReport}`}
                   target="_blank"
                   rel="noreferrer"
                   className="flex-1 bg-green-700 text-white text-center py-3 rounded-2xl font-semibold hover:bg-green-800"
@@ -166,7 +166,7 @@ function History() {
                 </a>
 
                 <a
-                  href={`http://localhost:5000/uploads/${report.pdfFile}`}
+                  href={`http://localhost:5000/${report.generatedReport}`}
                   download
                   className="flex-1 bg-gray-200 text-gray-800 text-center py-3 rounded-2xl font-semibold hover:bg-gray-300"
                 >

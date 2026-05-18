@@ -20,37 +20,61 @@ function UploadReport() {
 
   const uploadReport = async () => {
 
-    if (!file) {
-      alert("Please select PDF");
-      return;
-    }
+  if (!file) {
+    alert("Please select PDF");
+    return;
+  }
 
-    try {
+  try {
 
-      setLoading(true);
+    setLoading(true);
 
-      const formData = new FormData();
+    const formData = new FormData();
 
-      formData.append("pdf", file);
+    formData.append("pdf", file);
 
-      await axios.post(
-        "http://localhost:5000/api/reports/upload",
-        formData
-      );
+    // =========================
+    // ADD FARMER ID
+    // =========================
 
-      setSuccess(true);
+    const farmer = JSON.parse(
+      localStorage.getItem("farmer")
+    );
 
-      setLoading(false);
+    formData.append(
+      "farmerId",
+      farmer._id
+    );
 
-    } catch (error) {
+    // =========================
+    // API CALL
+    // =========================
 
-      console.log(error);
+    const response = await axios.post(
+      "http://localhost:5000/api/reports/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
-      alert("Upload Failed");
+    console.log(response.data);
 
-      setLoading(false);
-    }
-  };
+    setSuccess(true);
+
+    setLoading(false);
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Upload Failed");
+
+    setLoading(false);
+  }
+};
 
   return (
 

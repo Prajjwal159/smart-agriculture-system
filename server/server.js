@@ -15,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+app.use("/generated_reports",express.static("../ml-service/generated_reports"));
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/weather", weatherRoutes);

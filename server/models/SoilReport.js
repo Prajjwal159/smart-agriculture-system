@@ -26,10 +26,15 @@ const soilReportSchema = new mongoose.Schema(
       type: String,
     },
 
+    generatedReport: {
+      type: String,
+    },
+
     uploadedAt: {
       type: Date,
       default: Date.now,
     },
+
   },
   {
     timestamps: true,

@@ -74,6 +74,8 @@ const uploadReport = async (req, res) => {
 
       reportName: req.file.originalname,
 
+      generatedReport: predictionData.report_path,
+
       ...extractedData,
 
       recommendedNitrogenDose:
