@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import StatsCard from "../components/StatsCard";
@@ -10,7 +11,9 @@ import SoilRadarChart from "../components/SoilRadarChart";
 import YieldForecastChart from "../components/YieldForecastChart";
 import InsightsCard from "../components/InsightsCard";
 import WeatherWidget from "../components/WeatherWidget";
-import NotificationDropdown from "../components/NotificationDropdown";
+import FarmMap from "../components/FarmMap";
+import AIFarmSummary from "../components/AIFarmSummary";
+import LiveActivityFeed from "../components/LiveActivityFeed";
 
 import {
   FaSeedling,
@@ -44,6 +47,12 @@ function Dashboard() {
 
         {/* NAVBAR */}
         <Navbar />
+
+        <AIFarmSummary />
+
+        <div className="mt-8">
+          <LiveActivityFeed />
+          </div>
 
         {/* HERO SECTION */}
         <motion.div
@@ -175,6 +184,13 @@ function Dashboard() {
               </motion.div>
 
             </div>
+
+            {/* FARM MAP */}
+            <motion.div
+              whileHover={{ y: -4 }}
+            >
+              <FarmMap />
+            </motion.div>
 
             {/* INSIGHTS + WEATHER */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

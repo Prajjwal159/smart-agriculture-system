@@ -7,6 +7,7 @@ const upload = require("../config/multer");
 const {
   uploadReport,
   getReports,
+  getAnalytics,
 } = require("../controllers/reportController");
 
 
@@ -20,6 +21,11 @@ router.post(
 
 // GET REPORTS
 router.get("/", getReports);
+// ANALYTICS
+router.get(
+  "/analytics/:farmerId",
+  getAnalytics
+);
 
 
 module.exports = router;

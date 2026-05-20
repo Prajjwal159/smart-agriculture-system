@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
@@ -11,7 +15,7 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
+ Tooltip,
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
@@ -26,22 +30,8 @@ import {
 import { motion } from "framer-motion";
 
 // =========================
-// DATA
+// STATIC DATA
 // =========================
-
-const yieldData = [
-
-  { year: "2020", yield: 2.5 },
-
-  { year: "2021", yield: 3.2 },
-
-  { year: "2022", yield: 4.1 },
-
-  { year: "2023", yield: 5.0 },
-
-  { year: "2024", yield: 6.3 },
-
-];
 
 const fertilizerData = [
 
@@ -74,6 +64,54 @@ const COLORS = [
 ];
 
 function Analytics() {
+
+  // =========================
+  // STATE
+  // =========================
+
+  const [analytics, setAnalytics] =
+    useState(null);
+
+  // =========================
+  // FARMER
+  // =========================
+
+  const farmer = JSON.parse(
+    localStorage.getItem("farmer")
+  );
+
+  // =========================
+  // FETCH ANALYTICS
+  // =========================
+
+  useEffect(() => {
+
+    fetchAnalytics();
+
+  }, []);
+
+  const fetchAnalytics =
+    async () => {
+
+      try {
+
+        const response =
+          await axios.get(
+            `http://localhost:5000/api/reports/analytics/${farmer._id}`
+          );
+
+        console.log(response.data);
+
+        setAnalytics(
+          response.data
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+    };
 
   return (
 
@@ -123,8 +161,9 @@ function Analytics() {
         </motion.div>
 
         {/* STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-8 mt-10">
 
+          {/* SOIL HEALTH */}
           <div className="bg-gradient-to-br from-green-700 to-green-500 p-8 rounded-[30px] text-white shadow-2xl">
 
             <div className="flex justify-between items-center">
@@ -136,7 +175,9 @@ function Analytics() {
                 </p>
 
                 <h1 className="text-5xl font-bold mt-3">
-                  84%
+
+                  {analytics?.averageHealth || 0}%
+
                 </h1>
 
               </div>
@@ -147,6 +188,7 @@ function Analytics() {
 
           </div>
 
+          {/* YIELD */}
           <div className="bg-gradient-to-br from-blue-700 to-blue-500 p-8 rounded-[30px] text-white shadow-2xl">
 
             <div className="flex justify-between items-center">
@@ -158,7 +200,9 @@ function Analytics() {
                 </p>
 
                 <h1 className="text-5xl font-bold mt-3">
+
                   63%
+
                 </h1>
 
               </div>
@@ -169,6 +213,7 @@ function Analytics() {
 
           </div>
 
+          {/* MOISTURE */}
           <div className="bg-gradient-to-br from-cyan-700 to-cyan-500 p-8 rounded-[30px] text-white shadow-2xl">
 
             <div className="flex justify-between items-center">
@@ -180,7 +225,9 @@ function Analytics() {
                 </p>
 
                 <h1 className="text-5xl font-bold mt-3">
+
                   68%
+
                 </h1>
 
               </div>
@@ -191,6 +238,7 @@ function Analytics() {
 
           </div>
 
+          {/* CROP QUALITY */}
           <div className="bg-gradient-to-br from-orange-600 to-yellow-500 p-8 rounded-[30px] text-white shadow-2xl">
 
             <div className="flex justify-between items-center">
@@ -202,7 +250,9 @@ function Analytics() {
                 </p>
 
                 <h1 className="text-5xl font-bold mt-3">
+
                   91%
+
                 </h1>
 
               </div>
@@ -213,17 +263,42 @@ function Analytics() {
 
           </div>
 
+          {/* TOTAL REPORTS */}
+          <div className="bg-gradient-to-br from-purple-700 to-purple-500 p-8 rounded-[30px] text-white shadow-2xl">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-white/80">
+                  Total Reports
+                </p>
+
+                <h1 className="text-5xl font-bold mt-3">
+
+                  {analytics?.totalReports || 0}
+
+                </h1>
+
+              </div>
+
+              <FaChartLine size={40} />
+
+            </div>
+
+          </div>
+
         </div>
 
         {/* CHART GRID */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
 
-          {/* YIELD CHART */}
+          {/* AI PREDICTION TREND */}
           <div className="bg-white p-8 rounded-[35px] shadow-2xl">
 
             <h1 className="text-3xl font-bold text-green-900 mb-6">
 
-              Yearly Yield Forecast
+              AI Prediction Trend
 
             </h1>
 
@@ -232,11 +307,15 @@ function Analytics() {
               height={350}
             >
 
-              <LineChart data={yieldData}>
+              <LineChart
+                data={
+                  analytics?.nitrogenTrend || []
+                }
+              >
 
                 <CartesianGrid strokeDasharray="3 3" />
 
-                <XAxis dataKey="year" />
+                <XAxis dataKey="name" />
 
                 <YAxis />
 
@@ -244,7 +323,7 @@ function Analytics() {
 
                 <Line
                   type="monotone"
-                  dataKey="yield"
+                  dataKey="prediction"
                   stroke="#16a34a"
                   strokeWidth={5}
                 />
@@ -363,7 +442,7 @@ function Analytics() {
                 <p className="text-gray-600 mt-3 leading-7">
 
                   AI detected stable nutrient
-                  growth across recent reports.
+                  growth across uploaded reports.
 
                 </p>
 
@@ -373,15 +452,15 @@ function Analytics() {
 
                 <h2 className="font-bold text-blue-700 text-xl">
 
-                  Rainfall Optimization
+                  AI Prediction Tracking
 
                 </h2>
 
                 <p className="text-gray-600 mt-3 leading-7">
 
-                  Irrigation requirements may
-                  decrease next week due to
-                  expected rainfall.
+                  Machine learning predictions
+                  are dynamically generated
+                  from real uploaded soil reports.
 
                 </p>
 
@@ -391,14 +470,15 @@ function Analytics() {
 
                 <h2 className="font-bold text-orange-700 text-xl">
 
-                  Fertilizer Recommendation
+                  Fertilizer Optimization
 
                 </h2>
 
                 <p className="text-gray-600 mt-3 leading-7">
 
-                  Maintain moderate nitrogen
-                  application for best yield.
+                  Smart fertilizer recommendations
+                  help improve crop productivity
+                  and reduce overuse.
 
                 </p>
 

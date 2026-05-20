@@ -202,8 +202,104 @@ const getReports = async (req, res) => {
   }
 };
 
+// =========================
+// GET ANALYTICS
+// =========================
+
+const getAnalytics =
+  async (req, res) => {
+
+    try {
+
+      const { farmerId } =
+        req.params;
+
+      const reports =
+        await SoilReport.find({
+          farmerId,
+        }).sort({
+          createdAt: 1,
+        });
+
+      // NITROGEN TREND
+      const nitrogenTrend =
+        reports.map(
+          (report, index) => ({
+
+            name:
+              `Report ${index + 1}`,
+
+            nitrogen:
+              report.nitrogen || 0,
+
+            moisture:
+              report.moisture || 0,
+
+            prediction:
+              report.recommendedNitrogenDose || 0,
+
+          })
+        );
+
+      // SOIL HEALTH SCORE
+      const healthScores =
+        reports.map((report) => {
+
+          const score = (
+
+            (
+              (report.nitrogen || 0) +
+              (report.phosphorous || 0) +
+              (report.potassium || 0) +
+              (report.moisture || 0)
+
+            ) / 4
+
+          );
+
+          return score;
+
+        });
+
+      const averageHealth =
+        healthScores.length > 0
+
+          ? (
+              healthScores.reduce(
+                (a, b) => a + b,
+                0
+              ) /
+              healthScores.length
+            ).toFixed(2)
+
+          : 0;
+
+      res.status(200).json({
+
+        totalReports:
+          reports.length,
+
+        averageHealth,
+
+        nitrogenTrend,
+
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        message:
+          "Server Error",
+      });
+
+    }
+};
+
 
 module.exports = {
   uploadReport,
   getReports,
+  getAnalytics,
 };
