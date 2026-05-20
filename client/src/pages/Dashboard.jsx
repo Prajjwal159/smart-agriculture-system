@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import StatsCard from "../components/StatsCard";
@@ -9,6 +10,7 @@ import SoilRadarChart from "../components/SoilRadarChart";
 import YieldForecastChart from "../components/YieldForecastChart";
 import InsightsCard from "../components/InsightsCard";
 import WeatherWidget from "../components/WeatherWidget";
+import NotificationDropdown from "../components/NotificationDropdown";
 
 import {
   FaSeedling,
@@ -26,6 +28,9 @@ function Dashboard() {
   const farmer = JSON.parse(
     localStorage.getItem("farmer")
   );
+
+  const [notificationOpen, setNotificationOpen] =
+    useState(false);
 
   return (
 

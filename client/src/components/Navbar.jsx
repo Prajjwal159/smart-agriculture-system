@@ -1,12 +1,23 @@
+import React, { useState } from "react";
+
 import { FaBell } from "react-icons/fa";
+
+import NotificationDropdown from "./NotificationDropdown";
 
 function Navbar() {
 
-  const farmer = JSON.parse(localStorage.getItem("farmer"));
+  const farmer = JSON.parse(
+    localStorage.getItem("farmer")
+  );
+
+  const [notificationOpen, setNotificationOpen] =
+    useState(false);
 
   return (
+
     <div className="flex justify-between items-center mb-8">
 
+      {/* LEFT */}
       <div>
 
         <h1 className="text-4xl font-bold text-green-900">
@@ -19,13 +30,19 @@ function Navbar() {
 
       </div>
 
-      <div className="flex items-center gap-5">
+      {/* RIGHT */}
+      <div className="flex items-center gap-5 relative">
 
-        <div className="bg-white p-4 rounded-2xl shadow-lg cursor-pointer">
-          <FaBell className="text-green-700" />
-        </div>
+        {/* NOTIFICATION BUTTON */}
 
-        <div className="bg-gradient-to-r from-green-600 to-green-500 text-white px-6 py-3 rounded-2xl shadow-xl">
+        {/* DROPDOWN */}
+        <NotificationDropdown
+          open={notificationOpen}
+          setOpen={setNotificationOpen}
+        />
+
+        {/* AI BADGE */}
+        <div className="bg-gradient-to-r from-green-600 to-emerald-500 text-white px-6 py-4 rounded-2xl shadow-lg font-semibold">
 
           🌾 AI Smart Farming
 
