@@ -6,6 +6,8 @@ const FormData = require("form-data");
 
 const fs = require("fs");
 
+const Notification = require("../models/Notification");
+
 
 // UPLOAD REPORT
 const uploadReport = async (req, res) => {
@@ -60,6 +62,76 @@ const uploadReport = async (req, res) => {
     );
 
     const predictionData = predictionResponse.data;
+
+    // =========================
+// SMART NOTIFICATIONS
+// =========================
+
+const notifications = [];
+
+// LOW NITROGEN
+if (
+  extractedData.nitrogen < 30
+) {
+
+  notifications.push({
+    farmerId,
+
+    title:
+      "Low Nitrogen Alert",
+
+    message:
+      "Nitrogen level is low. Add fertilizer soon.",
+
+    type: "warning",
+  });
+}
+
+// HIGH MOISTURE
+if (
+  extractedData.moisture > 70
+) {
+
+  notifications.push({
+    farmerId,
+
+    title:
+      "High Moisture Detected",
+
+    message:
+      "Soil moisture is very high. Prevent waterlogging.",
+
+    type: "info",
+  });
+}
+
+// GOOD SOIL
+if (
+  extractedData.nitrogen > 40
+) {
+
+  notifications.push({
+    farmerId,
+
+    title:
+      "Healthy Soil Status",
+
+    message:
+      "Soil nutrients look balanced.",
+
+    type: "success",
+  });
+}
+
+// SAVE ALL
+if (
+  notifications.length > 0
+) {
+
+  await Notification.insertMany(
+    notifications
+  );
+}
 
 
     // =========================

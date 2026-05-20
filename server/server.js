@@ -6,6 +6,7 @@ const reportRoutes = require("./routes/reportRoutes");
 const connectDB = require("./config/db");
 const weatherRoutes = require("./routes/weatherRoutes");
 const chatbotRoutes = require("./routes/chatbotRoutes");
+const notificationRoutes =require("./routes/notificationRoutes");
 
 
 connectDB();
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/notifications",notificationRoutes);
 
 
 app.get("/", (req, res) => {
