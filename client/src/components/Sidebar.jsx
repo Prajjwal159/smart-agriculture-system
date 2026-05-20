@@ -1,134 +1,292 @@
+import { useState } from "react";
+
 import {
   FaHome,
   FaUser,
+  FaUpload,
   FaHistory,
-  FaFileUpload,
   FaRobot,
   FaLeaf,
+  FaBars,
+  FaTimes,
+  FaChartLine,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
 
 function Sidebar() {
-    const navigate = useNavigate();
 
-    const handleLogout = () => {
+  const location = useLocation();
 
-  // CLEAR STORAGE
-  localStorage.removeItem("token");
+  const [open, setOpen] = useState(false);
 
-  localStorage.removeItem("farmer");
+  const menuItems = [
 
-  // FORCE REDIRECT
-  window.location.href = "/login";
-};
+    {
+      title: "Dashboard",
+      icon: <FaHome />,
+      path: "/dashboard",
+    },
+
+    {
+      title: "Profile",
+      icon: <FaUser />,
+      path: "/profile",
+    },
+
+    {
+      title: "Upload Report",
+      icon: <FaUpload />,
+      path: "/upload",
+    },
+
+    {
+      title: "Prediction History",
+      icon: <FaHistory />,
+      path: "/history",
+    },
+
+    {
+      title: "AI Prediction",
+      icon: <FaChartLine />,
+      path: "/prediction",
+    },
+
+    {
+      title: "AI Assistant",
+      icon: <FaRobot />,
+      path: "/chatbot",
+    },
+
+  ];
+
+  // LOGOUT
+  const logout = () => {
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("farmer");
+
+    window.location.href = "/login";
+  };
+
   return (
-    <motion.div
-      initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      className="w-[270px] h-screen fixed overflow-y-auto bg-gradient-to-b from-green-900 to-green-700 text-white p-6 shadow-2xl"
-    >
 
-      {/* LOGO */}
-      <div className="flex items-center gap-3 mb-12">
+    <>
 
-        <div className="bg-white text-green-700 p-3 rounded-2xl">
-          <FaLeaf size={24} />
+      {/* MOBILE BUTTON */}
+      <button
+
+        onClick={() => setOpen(!open)}
+
+        className="lg:hidden fixed top-5 left-5 z-50 bg-green-700 text-white p-3 rounded-2xl shadow-xl"
+      >
+
+        {open ? <FaTimes /> : <FaBars />}
+
+      </button>
+
+      {/* SIDEBAR */}
+      <motion.div
+
+        initial={{ x: -100, opacity: 0 }}
+
+        animate={{ x: 0, opacity: 1 }}
+
+        className={`
+
+          fixed top-0 left-0 z-40
+          h-screen w-[290px]
+          bg-white/70 backdrop-blur-2xl
+          border-r border-white/20
+          shadow-2xl
+          transition-all duration-300
+
+          ${open ? "translate-x-0" : "-translate-x-full"}
+
+          lg:translate-x-0
+        `}
+      >
+
+        {/* LOGO */}
+        <div className="p-8 border-b border-gray-200">
+
+          <div className="flex items-center gap-4">
+
+            <div className="bg-gradient-to-br from-green-700 to-emerald-500 text-white p-4 rounded-3xl shadow-lg">
+
+              <FaLeaf size={28} />
+
+            </div>
+
+            <div>
+
+              <h1 className="text-3xl font-bold text-green-900">
+                Smart Agro
+              </h1>
+
+              <p className="text-gray-500 text-sm">
+                AI Farming Platform
+              </p>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <div>
-          <h1 className="text-2xl font-bold">
-            Smart Agro
-          </h1>
+        {/* MENU */}
+        <div className="p-6 flex flex-col justify-between h-[calc(100vh-140px)] overflow-y-auto">
 
-          <p className="text-sm text-green-200">
-            AI Farming Assistant
-          </p>
+          <div className="space-y-3">
+
+            {menuItems.map((item, index) => {
+
+              const active =
+                location.pathname === item.path;
+
+              return (
+
+                <Link
+                  key={index}
+                  to={item.path}
+                >
+
+                  <motion.div
+
+                    whileHover={{
+                      x: 8,
+                    }}
+
+                    whileTap={{
+                      scale: 0.98,
+                    }}
+
+                    className={`
+
+                      flex items-center gap-4
+                      px-5 py-4 rounded-2xl
+                      transition-all duration-300
+                      group relative overflow-hidden
+
+                      ${
+                        active
+                          ? `
+                            bg-gradient-to-r
+                            from-green-700
+                            to-emerald-500
+                            text-white
+                            shadow-xl
+                          `
+                          : `
+                            text-gray-700
+                            hover:bg-green-50
+                          `
+                      }
+                    `}
+                  >
+
+                    {/* ACTIVE GLOW */}
+                    {active && (
+
+                      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl"></div>
+
+                    )}
+
+                    {/* ICON */}
+                    <div
+                      className={`
+
+                        relative z-10
+                        text-xl p-3 rounded-xl
+
+                        ${
+                          active
+                            ? "bg-white/20"
+                            : "bg-green-100 text-green-700"
+                        }
+                      `}
+                    >
+
+                      {item.icon}
+
+                    </div>
+
+                    {/* TEXT */}
+                    <span className="relative z-10 font-semibold text-lg">
+
+                      {item.title}
+
+                    </span>
+
+                  </motion.div>
+
+                </Link>
+              );
+            })}
+
+          </div>
+
+          {/* BOTTOM */}
+          <div className="space-y-4 pb-6">
+
+            {/* AI STATUS */}
+            <div className="bg-gradient-to-br from-green-700 to-emerald-500 p-5 rounded-3xl text-white shadow-xl">
+
+              <h2 className="font-bold text-lg">
+                AI Smart Farming
+              </h2>
+
+              <p className="text-sm text-green-100 mt-2 leading-6">
+
+                AI-powered crop intelligence,
+                fertilizer prediction,
+                and smart farming insights.
+
+              </p>
+
+            </div>
+
+            {/* LOGOUT */}
+            <motion.button
+
+              whileHover={{
+                scale: 1.03,
+              }}
+
+              whileTap={{
+                scale: 0.97,
+              }}
+
+              onClick={logout}
+
+              className="
+                w-full
+                bg-red-500 hover:bg-red-600
+                text-white
+                py-4 rounded-2xl
+                font-bold
+                flex items-center justify-center gap-3
+                shadow-lg transition-all
+              "
+            >
+
+              <FaSignOutAlt />
+
+              Logout
+
+            </motion.button>
+
+          </div>
+
         </div>
 
-      </div>
+      </motion.div>
 
-      {/* MENU */}
-      <ul className="space-y-5">
-
-        <li
-  onClick={() => navigate("/dashboard")}
-  className="group flex items-center gap-4 bg-white/10 transition-all duration-300 px-5 py-4 rounded-2xl cursor-pointer shadow-lg"
->
-  <FaHome />
-  Dashboard
-</li>
-
-        <li className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer">
-          <FaUser />
-          Farmer Profile
-        </li>
-
-        <li
-  onClick={() => navigate("/upload")}
-  className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer"
->
-  <FaFileUpload />
-  Upload Soil Report
-</li>
-
-        <li
-  onClick={() => navigate("/history")}
-  className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer"
->
-  <FaHistory />
-  Prediction History
-</li>
-
-        <li
-  onClick={() => navigate("/prediction")}
-  className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer"
->
-  🧠
-  AI Prediction
-</li>
-
-        <li
-  onClick={() => navigate("/chatbot")}
-  className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer"
->
-  <FaRobot />
-  AI Assistant
-</li>
-
-        <li
-  onClick={() => navigate("/admin")}
-  className="flex items-center gap-4 hover:bg-white/10 transition-all duration-300 p-4 rounded-2xl cursor-pointer"
->
-  🛠️
-  Admin Panel
-</li>
-
-        <li
-  onClick={handleLogout}
-  className="group flex items-center gap-4 hover:bg-red-500/20 transition-all duration-300 px-5 py-4 rounded-2xl cursor-pointer mt-8 text-red-200 hover:text-white"
->
-  🚪
-  Logout
-</li>
-      </ul>
-
-      {/* FOOTER */}
-      <div className="absolute bottom-10 left-6 right-6 bg-white/10 p-5 rounded-2xl backdrop-blur-lg">
-
-        <h2 className="font-bold mb-2">
-          Smart Suggestion
-        </h2>
-
-        <p className="text-sm text-green-100 leading-6">
-          Soil nitrogen levels appear slightly low.
-          AI recommends balanced fertilization.
-        </p>
-
-      </div>
-
-    </motion.div>
+    </>
   );
 }
 
