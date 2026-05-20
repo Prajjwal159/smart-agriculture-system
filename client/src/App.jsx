@@ -13,6 +13,7 @@ import History from "./pages/History";
 import Prediction from "./pages/Prediction";
 import Chatbot from "./pages/Chatbot";
 import AdminDashboard from "./pages/AdminDashboard";
+import Analytics from "./pages/Analytics";
 
 
 // =========================
@@ -104,6 +105,15 @@ function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+                <Analytics />
+             </ProtectedRoute>
+            }
         />
 
 

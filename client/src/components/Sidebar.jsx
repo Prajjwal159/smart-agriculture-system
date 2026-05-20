@@ -61,6 +61,12 @@ function Sidebar() {
       path: "/chatbot",
     },
 
+    {
+      title: "Analytics",
+      icon: <FaChartLine />,
+      path: "/analytics",
+    },
+
   ];
 
   // LOGOUT
