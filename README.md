@@ -709,4 +709,3 @@ The platform helps farmers:
 
 This project demonstrates the real-world application of AI and Machine Learning in modern precision agriculture and smart farming systems.
 
-this is the updated readme file
