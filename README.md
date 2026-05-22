@@ -708,3 +708,4 @@ The platform helps farmers:
 ✅ Make data-driven farming decisions  
 
 This project demonstrates the real-world application of AI and Machine Learning in modern precision agriculture and smart farming systems.
+ryctlxfcgbjk
