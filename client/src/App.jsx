@@ -15,6 +15,8 @@ import Prediction from "./pages/Prediction";
 import Chatbot from "./pages/Chatbot";
 import AdminDashboard from "./pages/AdminDashboard";
 import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
+import FertilizerAdvisor from "./pages/FertilizerAdvisor";
 
 
 // =========================
@@ -116,6 +118,25 @@ function App() {
              </ProtectedRoute>
             }
         />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/fertilizer-advisor"
+          element={
+            <ProtectedRoute>
+              <FertilizerAdvisor />
+            </ProtectedRoute>
+          }
+        />
+        
 
 
         {/* DEFAULT REDIRECT */}

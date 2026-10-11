@@ -1,11 +1,4 @@
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
   { month: "Jan", yield: 30 },
@@ -18,33 +11,16 @@ const data = [
 
 function YieldForecastChart() {
   return (
-    <div className="bg-white p-8 rounded-[30px] shadow-xl">
-
-      <h1 className="text-3xl font-bold text-green-900 mb-8">
-        Yield Forecast Analysis
-      </h1>
-
-      <ResponsiveContainer width="100%" height={350}>
-
+    <div className="bg-white p-5 rounded-2xl shadow border border-gray-50">
+      <h1 className="text-base font-bold text-green-900 mb-4">Yield Forecast</h1>
+      <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={data}>
-
-          <XAxis dataKey="month" />
-
-          <YAxis />
-
+          <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 12 }} />
           <Tooltip />
-
-          <Area
-            type="monotone"
-            dataKey="yield"
-            stroke="#16a34a"
-            fill="#4ade80"
-          />
-
+          <Area type="monotone" dataKey="yield" stroke="#16a34a" fill="#4ade80" fillOpacity={0.5} />
         </AreaChart>
-
       </ResponsiveContainer>
-
     </div>
   );
 }

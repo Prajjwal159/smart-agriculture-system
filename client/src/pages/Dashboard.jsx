@@ -28,93 +28,58 @@ import { motion } from "framer-motion";
 
 function Dashboard() {
 
-  const farmer = JSON.parse(
-    localStorage.getItem("farmer")
-  );
-
-  const [notificationOpen, setNotificationOpen] =
-    useState(false);
+  const farmer = JSON.parse(localStorage.getItem("farmer"));
 
   return (
-
     <div className="bg-gradient-to-br from-[#f4fff7] via-[#eefbf3] to-[#e8fff0] min-h-screen">
 
-      {/* SIDEBAR */}
       <Sidebar />
 
-      {/* MAIN */}
-      <div className="ml-[290px] p-8">
+      {/* MAIN — offset matches new sidebar width 240px */}
+      <div className="ml-0 lg:ml-[240px] p-4 sm:p-5">
 
-        {/* NAVBAR */}
         <Navbar />
 
-        <AIFarmSummary />
-
-        <div className="mt-8">
-          <LiveActivityFeed />
+        {/* AI SUMMARY + LIVE FEED side by side */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div className="xl:col-span-2">
+            <AIFarmSummary />
           </div>
+          <div className="mt-5">
+            <LiveActivityFeed />
+          </div>
+        </div>
 
-        {/* HERO SECTION */}
+        {/* HERO BANNER */}
         <motion.div
-
-          initial={{ opacity: 0, y: 40 }}
-
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-
-          className="relative overflow-hidden rounded-[40px] bg-gradient-to-r from-green-800 via-green-700 to-emerald-600 p-10 shadow-2xl text-white"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-800 via-green-700 to-emerald-600 p-6 shadow-xl text-white mt-5"
         >
+          <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-12 -mt-12"></div>
+          <div className="absolute bottom-0 left-0 w-36 h-36 bg-white/5 rounded-full -ml-10 -mb-10"></div>
 
-          {/* GLOW */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full -mr-20 -mt-20"></div>
-
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full -ml-20 -mb-20"></div>
-
-          <div className="relative z-10">
-
-            <div className="flex items-center gap-4 mb-6">
-
-              <div className="bg-white text-green-700 p-4 rounded-3xl shadow-xl">
-                <FaLeaf size={30} />
-              </div>
-
-              <div>
-
-                <h1 className="text-5xl font-bold">
-                  Smart Agriculture AI 🌱
-                </h1>
-
-                <p className="text-green-100 mt-2 text-lg">
-                  Precision Farming & Intelligent Crop Analytics
-                </p>
-
-              </div>
-
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="bg-white text-green-700 p-3 rounded-2xl shadow-lg shrink-0">
+              <FaLeaf size={22} />
             </div>
-
-            <p className="max-w-3xl text-green-50 leading-8 text-lg">
-
-              AI-powered fertilizer optimization,
-              OCR soil analysis,
-              crop intelligence,
-              smart farming insights,
-              and yield prediction system.
-
-            </p>
-
+            <div>
+              <h1 className="text-2xl font-bold">Smart Agriculture AI 🌱</h1>
+              <p className="text-green-100 text-sm mt-0.5">
+                AI-powered fertilizer optimization · OCR soil analysis · Yield prediction
+              </p>
+            </div>
           </div>
-
         </motion.div>
 
         {/* STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-10">
-
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mt-5">
           <StatsCard
             title="Crop Type"
             value={farmer?.cropType || "Wheat"}
             color="bg-gradient-to-br from-green-700 to-green-500"
             icon={<FaSeedling />}
           />
-
           <StatsCard
             title="Farm Size"
             value={farmer?.farmSize || 12}
@@ -122,7 +87,6 @@ function Dashboard() {
             color="bg-gradient-to-br from-blue-700 to-blue-500"
             icon={<FaMapMarkedAlt />}
           />
-
           <StatsCard
             title="Water Level"
             value={78}
@@ -130,7 +94,6 @@ function Dashboard() {
             color="bg-gradient-to-br from-cyan-700 to-cyan-500"
             icon={<FaWater />}
           />
-
           <StatsCard
             title="Soil Health"
             value={84}
@@ -138,239 +101,116 @@ function Dashboard() {
             color="bg-gradient-to-br from-orange-600 to-yellow-500"
             icon={<FaChartLine />}
           />
-
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-10">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mt-5">
 
-          {/* LEFT SIDE */}
-          <div className="xl:col-span-2 space-y-8">
+          {/* LEFT — charts */}
+          <div className="xl:col-span-2 space-y-5">
 
-            {/* YIELD CHART */}
-            <motion.div
-              whileHover={{ y: -4 }}
-            >
+            <motion.div whileHover={{ y: -3 }}>
               <YieldChart />
             </motion.div>
 
-            {/* RECOMMENDATION */}
-            <motion.div
-              whileHover={{ y: -4 }}
-            >
+            <motion.div whileHover={{ y: -3 }}>
               <RecommendationCard />
             </motion.div>
 
-            {/* NITROGEN */}
-            <motion.div
-              whileHover={{ y: -4 }}
-            >
+            <motion.div whileHover={{ y: -3 }}>
               <NitrogenChart />
             </motion.div>
 
-            {/* ANALYTICS */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-              <motion.div
-                whileHover={{ y: -4 }}
-              >
-                <SoilRadarChart />
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -4 }}
-              >
-                <YieldForecastChart />
-              </motion.div>
-
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <motion.div whileHover={{ y: -3 }}><SoilRadarChart /></motion.div>
+              <motion.div whileHover={{ y: -3 }}><YieldForecastChart /></motion.div>
             </div>
 
-            {/* FARM MAP */}
-            <motion.div
-              whileHover={{ y: -4 }}
-            >
+            <motion.div whileHover={{ y: -3 }}>
               <FarmMap />
             </motion.div>
 
-            {/* INSIGHTS + WEATHER */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-              <motion.div
-                whileHover={{ y: -4 }}
-              >
-                <InsightsCard />
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -4 }}
-              >
-                <WeatherWidget />
-              </motion.div>
-
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <motion.div whileHover={{ y: -3 }}><InsightsCard /></motion.div>
+              <motion.div whileHover={{ y: -3 }}><WeatherWidget /></motion.div>
             </div>
 
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="space-y-8">
+          {/* RIGHT */}
+          <div className="space-y-5">
 
-            {/* PROFILE */}
-            <motion.div
-              whileHover={{ y: -4 }}
-            >
+            <motion.div whileHover={{ y: -3 }}>
               <ProfileCard />
             </motion.div>
 
-            {/* AI STATUS */}
-            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-[35px] shadow-2xl border border-white/40">
-
-              <div className="flex items-center gap-4 mb-6">
-
-                <div className="bg-purple-100 text-purple-700 p-4 rounded-2xl">
-                  <FaBrain size={26} />
+            {/* AI PREDICTION STATUS */}
+            <div className="bg-white/90 backdrop-blur-xl p-5 rounded-2xl shadow-lg border border-white/40">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-purple-100 text-purple-700 p-2.5 rounded-xl">
+                  <FaBrain size={18} />
                 </div>
-
                 <div>
-
-                  <h1 className="text-2xl font-bold text-green-900">
-                    AI Prediction Status
-                  </h1>
-
-                  <p className="text-gray-500">
-                    Real-time ML insights
-                  </p>
-
+                  <h1 className="text-base font-bold text-green-900">AI Prediction Status</h1>
+                  <p className="text-gray-400 text-xs">Real-time ML insights</p>
                 </div>
-
               </div>
 
-              <div className="space-y-6">
-
-                <div className="bg-green-50 p-5 rounded-2xl">
-
-                  <div className="flex justify-between">
-
-                    <span className="text-gray-600">
-                      Nitrogen Optimization
-                    </span>
-
-                    <span className="font-bold text-green-700">
-                      92%
-                    </span>
-
+              <div className="space-y-3">
+                <div className="bg-green-50 p-3 rounded-xl">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Nitrogen Optimization</span>
+                    <span className="font-bold text-green-700">92%</span>
                   </div>
-
-                  <div className="w-full bg-green-100 h-3 rounded-full mt-3">
-
-                    <div className="bg-green-600 h-3 rounded-full w-[92%]"></div>
-
+                  <div className="w-full bg-green-100 h-2 rounded-full mt-2">
+                    <div className="bg-green-600 h-2 rounded-full w-[92%]"></div>
                   </div>
-
                 </div>
 
-                <div className="bg-blue-50 p-5 rounded-2xl">
-
-                  <div className="flex justify-between">
-
-                    <span className="text-gray-600">
-                      Yield Forecast
-                    </span>
-
-                    <span className="font-bold text-blue-700">
-                      88%
-                    </span>
-
+                <div className="bg-blue-50 p-3 rounded-xl">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Yield Forecast</span>
+                    <span className="font-bold text-blue-700">88%</span>
                   </div>
-
-                  <div className="w-full bg-blue-100 h-3 rounded-full mt-3">
-
-                    <div className="bg-blue-600 h-3 rounded-full w-[88%]"></div>
-
+                  <div className="w-full bg-blue-100 h-2 rounded-full mt-2">
+                    <div className="bg-blue-600 h-2 rounded-full w-[88%]"></div>
                   </div>
-
                 </div>
 
-                <div className="bg-orange-50 p-5 rounded-2xl">
-
-                  <div className="flex justify-between">
-
-                    <span className="text-gray-600">
-                      Soil Health
-                    </span>
-
-                    <span className="font-bold text-orange-700">
-                      84%
-                    </span>
-
+                <div className="bg-orange-50 p-3 rounded-xl">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Soil Health</span>
+                    <span className="font-bold text-orange-700">84%</span>
                   </div>
-
-                  <div className="w-full bg-orange-100 h-3 rounded-full mt-3">
-
-                    <div className="bg-orange-500 h-3 rounded-full w-[84%]"></div>
-
+                  <div className="w-full bg-orange-100 h-2 rounded-full mt-2">
+                    <div className="bg-orange-500 h-2 rounded-full w-[84%]"></div>
                   </div>
-
                 </div>
-
               </div>
-
             </div>
 
-            {/* WEATHER */}
-            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-[35px] shadow-2xl border border-white/40">
-
-              <h1 className="text-2xl font-bold text-green-900 mb-6">
-                Weather Intelligence 🌦️
-              </h1>
-
-              <div className="space-y-5">
-
-                <div className="flex justify-between items-center bg-green-50 p-4 rounded-2xl">
-
-                  <span className="text-gray-700">
-                    Temperature
-                  </span>
-
-                  <span className="font-bold text-green-700">
-                    29°C
-                  </span>
-
+            {/* WEATHER SNAPSHOT */}
+            <div className="bg-white/90 backdrop-blur-xl p-5 rounded-2xl shadow-lg border border-white/40">
+              <h1 className="text-base font-bold text-green-900 mb-3">Weather Intelligence 🌦️</h1>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center bg-green-50 px-3 py-2.5 rounded-xl text-sm">
+                  <span className="text-gray-600">Temperature</span>
+                  <span className="font-bold text-green-700">29°C</span>
                 </div>
-
-                <div className="flex justify-between items-center bg-blue-50 p-4 rounded-2xl">
-
-                  <span className="text-gray-700">
-                    Humidity
-                  </span>
-
-                  <span className="font-bold text-blue-700">
-                    68%
-                  </span>
-
+                <div className="flex justify-between items-center bg-blue-50 px-3 py-2.5 rounded-xl text-sm">
+                  <span className="text-gray-600">Humidity</span>
+                  <span className="font-bold text-blue-700">68%</span>
                 </div>
-
-                <div className="flex justify-between items-center bg-cyan-50 p-4 rounded-2xl">
-
-                  <span className="text-gray-700">
-                    Rainfall
-                  </span>
-
-                  <span className="font-bold text-cyan-700">
-                    120 mm
-                  </span>
-
+                <div className="flex justify-between items-center bg-cyan-50 px-3 py-2.5 rounded-xl text-sm">
+                  <span className="text-gray-600">Rainfall</span>
+                  <span className="font-bold text-cyan-700">120 mm</span>
                 </div>
-
               </div>
-
             </div>
 
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }

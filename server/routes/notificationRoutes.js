@@ -1,24 +1,23 @@
 const express = require("express");
-
-const router = express.Router();
+const router  = express.Router();
 
 const {
   getNotifications,
   markAsRead,
-} = require(
-  "../controllers/notificationController"
-);
+  markAllRead,
+  clearAll,
+} = require("../controllers/notificationController");
 
-// GET
-router.get(
-  "/:farmerId",
-  getNotifications
-);
+// GET all for a farmer
+router.get("/:farmerId", getNotifications);
 
-// MARK READ
-router.put(
-  "/read/:id",
-  markAsRead
-);
+// MARK one as read
+router.put("/read/:id", markAsRead);
+
+// MARK ALL as read
+router.put("/read-all/:farmerId", markAllRead);
+
+// CLEAR ALL (delete)
+router.delete("/clear-all/:farmerId", clearAll);
 
 module.exports = router;

@@ -2,489 +2,106 @@ import { motion } from "framer-motion";
 
 function AIFarmSummary() {
 
-  const farmer = JSON.parse(
-    localStorage.getItem("farmer")
-  );
+  const farmer = JSON.parse(localStorage.getItem("farmer"));
 
   const hour = new Date().getHours();
-
   let greeting = "Good Evening 🌙";
-
-  if (hour < 12) {
-    greeting = "Good Morning ☀️";
-  } else if (hour < 18) {
-    greeting = "Good Afternoon 🌤️";
-  }
+  if (hour < 12) greeting = "Good Morning ☀️";
+  else if (hour < 18) greeting = "Good Afternoon 🌤️";
 
   return (
-
     <motion.div
-
-      initial={{
-        opacity: 0,
-        y: 20,
-      }}
-
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-
-      className="
-      bg-white
-      rounded-[35px]
-      shadow-xl
-      p-8
-      border
-      border-green-100
-      mt-8
-      overflow-hidden
-      relative
-      "
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl shadow border border-green-50 p-5 mt-5 relative overflow-hidden"
     >
+      {/* BG GLOW */}
+      <div className="absolute top-0 right-0 w-48 h-48 bg-green-100 rounded-full blur-3xl opacity-30 -mr-16 -mt-16"></div>
 
-      {/* BACKGROUND GLOW */}
-
-      <div className="
-      absolute
-      top-0
-      right-0
-      w-72
-      h-72
-      bg-green-100
-      rounded-full
-      blur-3xl
-      opacity-30
-      -mr-24
-      -mt-24
-      "></div>
-
-      {/* HEADER */}
-
-      <div className="
-      flex
-      flex-col
-      lg:flex-row
-      lg:items-center
-      lg:justify-between
-      gap-6
-      relative
-      z-10
-      ">
+      {/* TOP ROW */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 relative z-10">
 
         {/* LEFT */}
-
         <div>
-
-          <h1 className="
-          text-4xl
-          font-bold
-          text-green-900
-          ">
-
-            {greeting}
-
-          </h1>
-
-          <p className="
-          text-gray-500
-          mt-2
-          text-lg
-          ">
-
-            AI Daily Farm Summary
-
-          </p>
-
-          <div className="mt-5">
-
-            <h2 className="
-            text-2xl
-            font-bold
-            text-gray-800
-            ">
-
-              {farmer?.name} 🌾
-
-            </h2>
-
-            <p className="
-            text-gray-600
-            mt-4
-            leading-8
-            max-w-3xl
-            ">
-
-              Soil moisture is currently
-              optimal at <b>61%</b>.
-
-              Nitrogen levels are slightly
-              high and should be monitored.
-
-              Rain probability is
-              <b> 68%</b> tomorrow.
-
-              Expected crop yield improvement:
-              <b> +12%</b>.
-
-            </p>
-
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-green-900">{greeting}</h1>
+            <span className="text-xs text-gray-400 bg-green-50 px-2 py-0.5 rounded-lg">AI Daily Summary</span>
           </div>
-
+          <p className="text-base font-semibold text-gray-800 mt-1">{farmer?.name} 🌾</p>
+          <p className="text-gray-500 text-sm mt-1 leading-6 max-w-2xl">
+            Soil moisture optimal at <b>61%</b>. Nitrogen slightly high — monitor closely.
+            Rain probability <b>68%</b> tomorrow. Yield improvement: <b>+12%</b>.
+          </p>
         </div>
 
         {/* AI SCORE */}
-
-        <div className="
-        bg-gradient-to-br
-        from-green-600
-        to-emerald-500
-        text-white
-        rounded-[30px]
-        p-6
-        min-w-[180px]
-        shadow-2xl
-        ">
-
-          <p className="text-white/80">
-            AI Confidence
-          </p>
-
-          <h1 className="
-          text-5xl
-          font-bold
-          mt-3
-          ">
-
-            92%
-
-          </h1>
-
-          <p className="
-          mt-3
-          text-sm
-          text-green-100
-          ">
-
-            Smart prediction accuracy
-          </p>
-
+        <div className="bg-gradient-to-br from-green-600 to-emerald-500 text-white rounded-2xl p-4 min-w-[140px] shadow-lg shrink-0">
+          <p className="text-white/80 text-xs">AI Confidence</p>
+          <h1 className="text-4xl font-bold mt-1">92%</h1>
+          <p className="text-xs text-green-100 mt-1">Prediction accuracy</p>
         </div>
 
       </div>
 
-      {/* STATS */}
+      {/* MINI STATS */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4 relative z-10">
 
-      <div className="
-      grid
-      grid-cols-2
-      lg:grid-cols-4
-      gap-6
-      mt-10
-      relative
-      z-10
-      ">
-
-        <div className="
-        bg-green-50
-        p-6
-        rounded-[25px]
-        border
-        border-green-100
-        ">
-
-          <p className="text-gray-500">
-            Soil Health
-          </p>
-
-          <h1 className="
-          text-4xl
-          font-bold
-          text-green-700
-          mt-3
-          ">
-
-            84
-
-          </h1>
-
+        <div className="bg-green-50 px-4 py-3 rounded-xl border border-green-100">
+          <p className="text-gray-400 text-xs">Soil Health</p>
+          <h1 className="text-2xl font-bold text-green-700 mt-1">84</h1>
         </div>
 
-        <div className="
-        bg-blue-50
-        p-6
-        rounded-[25px]
-        border
-        border-blue-100
-        ">
-
-          <p className="text-gray-500">
-            Moisture
-          </p>
-
-          <h1 className="
-          text-4xl
-          font-bold
-          text-blue-700
-          mt-3
-          ">
-
-            61%
-
-          </h1>
-
+        <div className="bg-blue-50 px-4 py-3 rounded-xl border border-blue-100">
+          <p className="text-gray-400 text-xs">Moisture</p>
+          <h1 className="text-2xl font-bold text-blue-700 mt-1">61%</h1>
         </div>
 
-        <div className="
-        bg-orange-50
-        p-6
-        rounded-[25px]
-        border
-        border-orange-100
-        ">
-
-          <p className="text-gray-500">
-            Rain Risk
-          </p>
-
-          <h1 className="
-          text-4xl
-          font-bold
-          text-orange-600
-          mt-3
-          ">
-
-            68%
-
-          </h1>
-
+        <div className="bg-orange-50 px-4 py-3 rounded-xl border border-orange-100">
+          <p className="text-gray-400 text-xs">Rain Risk</p>
+          <h1 className="text-2xl font-bold text-orange-600 mt-1">68%</h1>
         </div>
 
-        <div className="
-        bg-purple-50
-        p-6
-        rounded-[25px]
-        border
-        border-purple-100
-        ">
-
-          <p className="text-gray-500">
-            Yield Growth
-          </p>
-
-          <h1 className="
-          text-4xl
-          font-bold
-          text-purple-700
-          mt-3
-          ">
-
-            +12%
-
-          </h1>
-
+        <div className="bg-purple-50 px-4 py-3 rounded-xl border border-purple-100">
+          <p className="text-gray-400 text-xs">Yield Growth</p>
+          <h1 className="text-2xl font-bold text-purple-700 mt-1">+12%</h1>
         </div>
 
       </div>
 
       {/* ALERTS */}
+      <div className="mt-4 relative z-10">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-bold text-green-900">Smart AI Alerts</h2>
+          <span className="bg-red-100 text-red-600 px-2.5 py-1 rounded-lg text-xs font-semibold">3 Active</span>
+        </div>
 
-      <div className="
-      mt-10
-      relative
-      z-10
-      ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
 
-        <div className="
-        flex
-        items-center
-        justify-between
-        mb-5
-        ">
+          <div className="bg-yellow-50 border border-yellow-100 p-3 rounded-xl flex items-center gap-3">
+            <span className="text-lg">🌧️</span>
+            <div>
+              <p className="font-semibold text-gray-800 text-xs">Rain Expected Tomorrow</p>
+              <p className="text-gray-400 text-xs mt-0.5">Avoid fertilizer during rainfall.</p>
+            </div>
+          </div>
 
-          <h1 className="
-          text-2xl
-          font-bold
-          text-green-900
-          ">
+          <div className="bg-blue-50 border border-blue-100 p-3 rounded-xl flex items-center gap-3">
+            <span className="text-lg">💧</span>
+            <div>
+              <p className="font-semibold text-gray-800 text-xs">Irrigation Stable</p>
+              <p className="text-gray-400 text-xs mt-0.5">Moisture is healthy for crops.</p>
+            </div>
+          </div>
 
-            Smart AI Alerts
-
-          </h1>
-
-          <div className="
-          bg-red-100
-          text-red-600
-          px-4
-          py-2
-          rounded-xl
-          text-sm
-          font-semibold
-          ">
-
-            3 Active Alerts
-
+          <div className="bg-green-50 border border-green-100 p-3 rounded-xl flex items-center gap-3">
+            <span className="text-lg">🌱</span>
+            <div>
+              <p className="font-semibold text-gray-800 text-xs">Nitrogen Monitoring</p>
+              <p className="text-gray-400 text-xs mt-0.5">Slightly high. Reduce urea.</p>
+            </div>
           </div>
 
         </div>
-
-        <div className="space-y-4">
-
-          <div className="
-          bg-yellow-50
-          border
-          border-yellow-100
-          p-5
-          rounded-2xl
-          flex
-          items-center
-          gap-4
-          ">
-
-            <div className="
-            w-12
-            h-12
-            rounded-xl
-            bg-yellow-100
-            flex
-            items-center
-            justify-center
-            text-xl
-            ">
-
-              🌧️
-
-            </div>
-
-            <div>
-
-              <h2 className="
-              font-bold
-              text-gray-800
-              ">
-
-                Rain Expected Tomorrow
-
-              </h2>
-
-              <p className="
-              text-gray-500
-              mt-1
-              ">
-
-                Avoid fertilizer application
-                during rainfall.
-
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="
-          bg-blue-50
-          border
-          border-blue-100
-          p-5
-          rounded-2xl
-          flex
-          items-center
-          gap-4
-          ">
-
-            <div className="
-            w-12
-            h-12
-            rounded-xl
-            bg-blue-100
-            flex
-            items-center
-            justify-center
-            text-xl
-            ">
-
-              💧
-
-            </div>
-
-            <div>
-
-              <h2 className="
-              font-bold
-              text-gray-800
-              ">
-
-                Irrigation Stable
-
-              </h2>
-
-              <p className="
-              text-gray-500
-              mt-1
-              ">
-
-                Soil moisture is healthy
-                for crop growth.
-
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="
-          bg-green-50
-          border
-          border-green-100
-          p-5
-          rounded-2xl
-          flex
-          items-center
-          gap-4
-          ">
-
-            <div className="
-            w-12
-            h-12
-            rounded-xl
-            bg-green-100
-            flex
-            items-center
-            justify-center
-            text-xl
-            ">
-
-              🌱
-
-            </div>
-
-            <div>
-
-              <h2 className="
-              font-bold
-              text-gray-800
-              ">
-
-                Nitrogen Monitoring
-
-              </h2>
-
-              <p className="
-              text-gray-500
-              mt-1
-              ">
-
-                Nitrogen slightly high.
-                Reduce urea this week.
-
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
 
     </motion.div>

@@ -3,52 +3,27 @@ function ProfileCard() {
   const farmer = JSON.parse(localStorage.getItem("farmer"));
 
   return (
-    <div className="bg-white p-7 rounded-[30px] shadow-xl">
-
-      <div className="flex items-center gap-5">
-
-        <div className="w-20 h-20 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl font-bold">
+    <div className="bg-white p-5 rounded-2xl shadow border border-gray-50">
+      <div className="flex items-center gap-4">
+        <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
           {farmer?.name?.charAt(0)}
         </div>
-
         <div>
-
-          <h1 className="text-2xl font-bold text-green-900">
-            {farmer?.name}
-          </h1>
-
-          <p className="text-gray-500">
-            {farmer?.district}, {farmer?.state}
-          </p>
-
+          <h1 className="text-base font-bold text-green-900">{farmer?.name}</h1>
+          <p className="text-gray-400 text-xs mt-0.5">{farmer?.district}, {farmer?.state}</p>
         </div>
-
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-8">
-
-        <div className="bg-green-50 p-4 rounded-2xl">
-          <h2 className="text-gray-500">
-            Farm Size
-          </h2>
-
-          <p className="text-xl font-bold text-green-800 mt-2">
-            {farmer?.farmSize} Acres
-          </p>
+      <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="bg-green-50 p-3 rounded-xl">
+          <p className="text-gray-400 text-xs">Farm Size</p>
+          <p className="text-base font-bold text-green-800 mt-1">{farmer?.farmSize} Acres</p>
         </div>
-
-        <div className="bg-green-50 p-4 rounded-2xl">
-          <h2 className="text-gray-500">
-            Crop Type
-          </h2>
-
-          <p className="text-xl font-bold text-green-800 mt-2">
-            {farmer?.cropType}
-          </p>
+        <div className="bg-green-50 p-3 rounded-xl">
+          <p className="text-gray-400 text-xs">Crop Type</p>
+          <p className="text-base font-bold text-green-800 mt-1">{farmer?.cropType}</p>
         </div>
-
       </div>
-
     </div>
   );
 }

@@ -9,6 +9,7 @@ const chatbotRoutes = require("./routes/chatbotRoutes");
 const notificationRoutes =require("./routes/notificationRoutes");
 
 
+
 connectDB();
 
 const app = express();
@@ -22,7 +23,6 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/notifications",notificationRoutes);
-
 
 app.get("/", (req, res) => {
   res.send("API Running");
