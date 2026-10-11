@@ -259,31 +259,199 @@ const getReports = async (req, res) => {
   }
 };
 
-// ─── GET ANALYTICS ─────────────────────────────────────────────────────────
+// ─── GET ANALYTICS (user's own reports) ────────────────────────────────────
 const getAnalytics = async (req, res) => {
   try {
     const { farmerId } = req.params;
     const reports = await SoilReport.find({ farmerId }).sort({ createdAt: 1 });
 
-    const nitrogenTrend = reports.map((r, i) => ({
-      name:       `Report ${i + 1}`,
+    if (reports.length === 0) {
+      return res.status(200).json({
+        totalReports:    0,
+        averageHealth:   0,
+        averageNitrogen: 0,
+        averageMoisture: 0,
+        averageDose:     0,
+        nitrogenTrend:   [],
+        moistureTrend:   [],
+        yieldTrend:      [],
+        fertilizerBreakdown: [],
+        hasData: false,
+      });
+    }
+
+    // Per-report trend (ordered chronologically, labelled by upload date)
+    const nitrogenTrend = reports.map((r) => ({
+      name:       new Date(r.createdAt).toLocaleDateString("en-IN", { day:"numeric", month:"short" }),
       nitrogen:   r.nitrogen    || 0,
+      phosphorous:r.phosphorous || 0,
+      potassium:  r.potassium   || 0,
       moisture:   r.moisture    || 0,
       prediction: r.recommendedNitrogenDose || 0,
     }));
 
+    // Yield progression — estimated from recommended dose (dose * 0.08 tons/ha)
+    const yieldTrend = reports.map((r) => {
+      const dose = r.recommendedNitrogenDose || 0;
+      return {
+        name:     new Date(r.createdAt).toLocaleDateString("en-IN", { day:"numeric", month:"short" }),
+        actual:   parseFloat((dose * 0.06).toFixed(2)),
+        forecast: parseFloat((dose * 0.08).toFixed(2)),
+      };
+    });
+
+    // Average nutrient values
+    const avg = (key) =>
+      reports.length ? Math.round(reports.reduce((s, r) => s + (r[key] || 0), 0) / reports.length) : 0;
+
+    const averageNitrogen  = avg("nitrogen");
+    const averageMoisture  = avg("moisture");
+    const averageDose      = avg("recommendedNitrogenDose");
+
+    // Soil health score per report
     const healthScores = reports.map(r =>
       ((r.nitrogen||0) + (r.phosphorous||0) + (r.potassium||0) + (r.moisture||0)) / 4
     );
-
-    const averageHealth = healthScores.length > 0
-      ? (healthScores.reduce((a, b) => a + b, 0) / healthScores.length).toFixed(2)
+    const averageHealth = healthScores.length
+      ? (healthScores.reduce((a, b) => a + b, 0) / healthScores.length).toFixed(1)
       : 0;
 
+    // Fertilizer breakdown — N:P:K ratio averaged across all reports
+    const totalN = reports.reduce((s, r) => s + (r.nitrogen || 0), 0);
+    const totalP = reports.reduce((s, r) => s + (r.phosphorous || 0), 0);
+    const totalK = reports.reduce((s, r) => s + (r.potassium || 0), 0);
+    const totalNPK = totalN + totalP + totalK || 1;
+    const fertilizerBreakdown = [
+      { name: "Nitrogen",    value: Math.round((totalN / totalNPK) * 100) },
+      { name: "Phosphorous", value: Math.round((totalP / totalNPK) * 100) },
+      { name: "Potassium",   value: Math.round((totalK / totalNPK) * 100) },
+    ];
+
+    // Last report's recommendations for the dashboard card
+    const lastReport = reports[reports.length - 1];
+
     res.status(200).json({
-      totalReports: reports.length,
-      averageHealth,
+      totalReports:       reports.length,
+      averageHealth:      parseFloat(averageHealth),
+      averageNitrogen,
+      averageMoisture,
+      averageDose,
       nitrogenTrend,
+      yieldTrend,
+      fertilizerBreakdown,
+      lastRecommendations: lastReport?.recommendations || [],
+      lastNitrogen:        lastReport?.nitrogen    || 0,
+      lastPhosphorous:     lastReport?.phosphorous || 0,
+      lastPotassium:       lastReport?.potassium   || 0,
+      lastMoisture:        lastReport?.moisture    || 0,
+      lastDose:            lastReport?.recommendedNitrogenDose || 0,
+      hasData: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+// ─── GET DASHBOARD (location aggregate — all farmers in same district) ──────
+const getDashboardStats = async (req, res) => {
+  try {
+    const { district } = req.params;
+
+    // Find all farmers registered in this district
+    const farmers = await Farmer.find({
+      district: { $regex: new RegExp(district, "i") }
+    });
+    const farmerIds = farmers.map(f => f._id);
+
+    if (farmerIds.length === 0) {
+      return res.status(200).json({ hasData: false, district, totalFarmers: 0 });
+    }
+
+    // All reports from farmers in this district
+    const reports = await SoilReport.find({
+      farmerId: { $in: farmerIds }
+    }).sort({ createdAt: 1 });
+
+    if (reports.length === 0) {
+      return res.status(200).json({ hasData: false, district, totalFarmers: farmers.length });
+    }
+
+    // Average nutrient levels across district
+    const avg = (key) =>
+      Math.round(reports.reduce((s, r) => s + (r[key] || 0), 0) / reports.length);
+
+    const avgNitrogen   = avg("nitrogen");
+    const avgPhosphorous= avg("phosphorous");
+    const avgPotassium  = avg("potassium");
+    const avgMoisture   = avg("moisture");
+    const avgDose       = avg("recommendedNitrogenDose");
+
+    // District-level soil health score
+    const healthScores  = reports.map(r =>
+      ((r.nitrogen||0)+(r.phosphorous||0)+(r.potassium||0)+(r.moisture||0))/4
+    );
+    const avgHealth = healthScores.length
+      ? parseFloat((healthScores.reduce((a,b) => a+b,0)/healthScores.length).toFixed(1))
+      : 0;
+
+    // Nitrogen trend over time (group by month)
+    const monthMap = {};
+    reports.forEach(r => {
+      const key = new Date(r.createdAt).toLocaleDateString("en-IN", { month:"short", year:"2-digit" });
+      if (!monthMap[key]) monthMap[key] = { nitrogen:[], moisture:[], dose:[] };
+      monthMap[key].nitrogen.push(r.nitrogen || 0);
+      monthMap[key].moisture.push(r.moisture || 0);
+      monthMap[key].dose.push(r.recommendedNitrogenDose || 0);
+    });
+    const nitrogenTrend = Object.entries(monthMap).map(([name, vals]) => ({
+      name,
+      nitrogen: Math.round(vals.nitrogen.reduce((a,b)=>a+b,0)/vals.nitrogen.length),
+      moisture: Math.round(vals.moisture.reduce((a,b)=>a+b,0)/vals.moisture.length),
+      prediction: Math.round(vals.dose.reduce((a,b)=>a+b,0)/vals.dose.length),
+    }));
+
+    // Crop type distribution
+    const cropCount = {};
+    farmers.forEach(f => {
+      const c = f.cropType || "Unknown";
+      cropCount[c] = (cropCount[c] || 0) + 1;
+    });
+    const cropDistribution = Object.entries(cropCount).map(([name, value]) => ({ name, value }));
+
+    // Yield estimate trend
+    const yieldTrend = nitrogenTrend.map(d => ({
+      name:     d.name,
+      actual:   parseFloat((d.prediction * 0.06).toFixed(2)),
+      forecast: parseFloat((d.prediction * 0.08).toFixed(2)),
+    }));
+
+    // Fertilizer breakdown
+    const totalN = reports.reduce((s,r)=>s+(r.nitrogen||0),0);
+    const totalP = reports.reduce((s,r)=>s+(r.phosphorous||0),0);
+    const totalK = reports.reduce((s,r)=>s+(r.potassium||0),0);
+    const tot    = totalN+totalP+totalK || 1;
+    const fertilizerBreakdown = [
+      { name:"Nitrogen",    value: Math.round((totalN/tot)*100) },
+      { name:"Phosphorous", value: Math.round((totalP/tot)*100) },
+      { name:"Potassium",   value: Math.round((totalK/tot)*100) },
+    ];
+
+    res.status(200).json({
+      hasData: true,
+      district,
+      totalFarmers:   farmers.length,
+      totalReports:   reports.length,
+      avgHealth,
+      avgNitrogen,
+      avgPhosphorous,
+      avgPotassium,
+      avgMoisture,
+      avgDose,
+      nitrogenTrend,
+      yieldTrend,
+      cropDistribution,
+      fertilizerBreakdown,
     });
   } catch (error) {
     console.log(error);
@@ -303,4 +471,4 @@ const deleteAllReports = async (req, res) => {
   }
 };
 
-module.exports = { uploadReport, getReports, getAnalytics, deleteAllReports };
+module.exports = { uploadReport, getReports, getAnalytics, getDashboardStats, deleteAllReports };

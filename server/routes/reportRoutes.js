@@ -6,6 +6,7 @@ const {
   uploadReport,
   getReports,
   getAnalytics,
+  getDashboardStats,
   deleteAllReports,
 } = require("../controllers/reportController");
 
@@ -15,8 +16,11 @@ router.post("/upload", upload.single("pdf"), uploadReport);
 // GET ALL REPORTS
 router.get("/", getReports);
 
-// ANALYTICS FOR A FARMER
+// USER ANALYTICS (personal — from their own reports)
 router.get("/analytics/:farmerId", getAnalytics);
+
+// DASHBOARD STATS (location aggregate — all farmers in same district)
+router.get("/dashboard/:district", getDashboardStats);
 
 // DELETE ALL REPORTS FOR A FARMER
 router.delete("/delete-all/:farmerId", deleteAllReports);
