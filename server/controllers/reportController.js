@@ -5,6 +5,9 @@ const axios         = require("axios");
 const FormData      = require("form-data");
 const fs            = require("fs");
 
+// ─── ML Service URL — set ML_SERVICE_URL in Render env vars for production ─
+const ML_URL = process.env.ML_SERVICE_URL || "http://127.0.0.1:8000";
+
 // ─── helpers ──────────────────────────────────────────────────────────────
 
 // Map crop names from the registration form to the ML model's known crop classes
@@ -90,7 +93,7 @@ const uploadReport = async (req, res) => {
     formData.append("pdf", fs.createReadStream(req.file.path));
 
     const ocrResponse = await axios.post(
-      "http://127.0.0.1:8000/extract",
+      `${ML_URL}/extract`,
       formData,
       { headers: formData.getHeaders() }
     );
@@ -98,7 +101,7 @@ const uploadReport = async (req, res) => {
 
     // ── ML Prediction — now uses REAL farmer data ───────────────────────
     const predictionResponse = await axios.post(
-      "http://127.0.0.1:8000/predict",
+      `${ML_URL}/predict`,
       {
         temperature:  weather.temperature,
         humidity:     weather.humidity,
