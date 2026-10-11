@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE } from "../api";
 import {
   FaRobot, FaUser, FaPaperPlane, FaLeaf,
   FaSpinner, FaTrashAlt, FaSeedling,
@@ -44,7 +45,7 @@ function Chatbot() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/chatbot", { message: msg });
+      const res = await axios.post(`${API_BASE}/api/chatbot`, { message: msg });
       setMessages(prev => [...prev, {
         sender: "bot",
         text: res.data.reply,

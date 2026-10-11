@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE, ML_BASE } from "../api";
 import {
   FaBrain, FaLeaf, FaFlask, FaTint,
   FaThermometerHalf, FaWind, FaSeedling,
@@ -41,7 +42,7 @@ function Prediction() {
         potassium:    Number(formData.potassium),
         phosphorous:  Number(formData.phosphorous),
       };
-      const res = await axios.post("http://127.0.0.1:8000/predict", payload);
+      const res = await axios.post(`${ML_BASE}/predict`, payload);
       if (res.data.error) {
         setError(`ML Service Error: ${res.data.error}`);
       } else {
@@ -286,7 +287,7 @@ function Prediction() {
                   {/* PDF REPORT */}
                   {result.report_path && (
                     <a
-                      href={`http://localhost:5000/${result.report_path}`}
+                      href={`${API_BASE}/${result.report_path}`}
                       target="_blank" rel="noreferrer"
                       className="flex items-center justify-center gap-2 w-full border-2 border-green-600 text-green-700 py-3 rounded-xl font-semibold text-sm hover:bg-green-50 transition-all"
                     >

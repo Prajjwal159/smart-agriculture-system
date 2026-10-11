@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_BASE, ML_BASE } from "../api";
 import { useSearchParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -163,7 +164,7 @@ export default function FertilizerAdvisor() {
     setResult(null);
     setActiveStep(0);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/fertilizer-advisor", values);
+      const res = await axios.post(`${ML_BASE}/fertilizer-advisor`, values);
       if (res.data.error) {
         setError(`Service Error: ${res.data.error}`);
       } else {

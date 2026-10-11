@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../api";
 
 function WeatherWidget() {
 
@@ -9,7 +10,7 @@ function WeatherWidget() {
 
   const fetchWeather = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/weather/Mysore");
+      const response = await axios.get(`${API_BASE}/api/weather/Mysore`);
       setWeather(response.data);
     } catch (error) {
       console.log(error);

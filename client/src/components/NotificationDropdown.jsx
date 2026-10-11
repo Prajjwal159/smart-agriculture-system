@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBell, FaTint, FaCloudRain, FaLeaf, FaCheckCircle, FaTrashAlt, FaCheck } from "react-icons/fa";
+import { API_BASE } from "../api";
 
 function NotificationDropdown({ open, setOpen }) {
   const [notifications, setNotifications] = useState([]);
@@ -11,7 +12,7 @@ function NotificationDropdown({ open, setOpen }) {
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/notifications/${farmer._id}`);
+      const res = await axios.get(`${API_BASE}/api/notifications/${farmer._id}`);
       setNotifications(res.data);
     } catch (error) { console.log(error); }
   };
@@ -19,7 +20,7 @@ function NotificationDropdown({ open, setOpen }) {
   // mark one as read
   const handleMarkRead = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/notifications/read/${id}`);
+      await axios.put(`${API_BASE}/api/notifications/read/${id}`);
       setNotifications(prev =>
         prev.map(n => n._id === id ? { ...n, isRead: true } : n)
       );
@@ -29,7 +30,7 @@ function NotificationDropdown({ open, setOpen }) {
   // mark all as read
   const handleMarkAllRead = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/notifications/read-all/${farmer._id}`);
+      await axios.put(`${API_BASE}/api/notifications/read-all/${farmer._id}`);
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     } catch (error) { console.log(error); }
   };
@@ -37,7 +38,7 @@ function NotificationDropdown({ open, setOpen }) {
   // clear all — deletes from DB
   const handleClearAll = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/notifications/clear-all/${farmer._id}`);
+      await axios.delete(`${API_BASE}/api/notifications/clear-all/${farmer._id}`);
       setNotifications([]);
     } catch (error) { console.log(error); }
   };

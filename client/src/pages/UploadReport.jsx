@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE, ML_BASE } from "../api";
 
 function UploadReport() {
   const [file, setFile]       = useState(null);
@@ -81,7 +82,7 @@ function UploadReport() {
       formData.append("farmerId", farmer._id);
 
       const response = await axios.post(
-        "http://localhost:5000/api/reports/upload",
+        `${API_BASE}/api/reports/upload`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -258,7 +259,7 @@ function UploadReport() {
                     {/* View AI PDF */}
                     {result.generatedReport && (
                       <a
-                        href={`http://localhost:5000/${result.generatedReport}`}
+                        href={`${API_BASE}/${result.generatedReport}`}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center justify-center gap-2 w-full border-2 border-green-600 text-green-700 py-3 rounded-xl font-semibold text-sm hover:bg-green-50 transition-all"

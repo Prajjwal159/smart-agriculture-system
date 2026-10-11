@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE } from "../api";
 import {
   FaUser, FaEnvelope, FaMapMarkerAlt, FaRulerCombined,
   FaSeedling, FaEdit, FaSave, FaTimes, FaLeaf,
@@ -124,7 +125,7 @@ function Profile() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/reports");
+        const res = await axios.get(`${API_BASE}/api/reports`);
         setReports(res.data.filter(r => String(r.farmerId) === String(farmer._id)));
       } catch { /* silent */ }
     };
@@ -178,7 +179,7 @@ function Profile() {
 
   const handleClearAllReports = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/reports/delete-all/${farmer._id}`);
+      await axios.delete(`${API_BASE}/api/reports/delete-all/${farmer._id}`);
       setReports([]);
       setClearMsg("✅ All reports cleared successfully.");
       setTimeout(() => setClearMsg(""), 3000);
@@ -373,7 +374,7 @@ function Profile() {
                               {/* ── CLICKABLE PDF LINK ── */}
                               {r.generatedReport && (
                                 <a
-                                  href={`http://localhost:5000/${r.generatedReport}`}
+                                  href={`${API_BASE}/${r.generatedReport}`}
                                   target="_blank"
                                   rel="noreferrer"
                                   title="Open AI Report PDF"

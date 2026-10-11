@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE } from "../api";
 import {
   LineChart, Line, PieChart, Pie, Cell,
   BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -49,7 +50,7 @@ function Analytics() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/reports/analytics/${farmer._id}`);
+      const res = await axios.get(`${API_BASE}/api/reports/analytics/${farmer._id}`);
       setAnalytics(res.data);
     } catch (err) {
       console.log(err);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { FaLeaf, FaRobot, FaChartLine, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { API_BASE } from "../api";
 
 function Login() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Login() {
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+      const res = await axios.post(`${API_BASE}/api/auth/login`, formData);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("farmer", JSON.stringify(res.data.farmer));
       navigate("/dashboard");

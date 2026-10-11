@@ -7,6 +7,7 @@ import {
   FaEnvelope, FaLock, FaUser, FaMapMarkerAlt,
   FaRulerCombined, FaEye, FaEyeSlash,
 } from "react-icons/fa";
+import { API_BASE } from "../api";
 
 function Register() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function Register() {
     setError("");
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      await axios.post(`${API_BASE}/api/auth/register`, formData);
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");

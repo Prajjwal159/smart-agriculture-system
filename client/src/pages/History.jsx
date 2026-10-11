@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { API_BASE } from "../api";
 import {
   FaFilePdf, FaDownload, FaEye, FaLeaf,
   FaFlask, FaTint, FaSeedling, FaSearch,
@@ -64,7 +65,7 @@ function History() {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const res      = await axios.get("http://localhost:5000/api/reports");
+      const res = await axios.get(`${API_BASE}/api/reports`);
       const filtered = res.data.filter(r => String(r.farmerId) === String(farmer._id));
       setReports(filtered);
     } catch (error) {
@@ -76,7 +77,7 @@ function History() {
 
   const handleClearAll = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/reports/delete-all/${farmer._id}`);
+      await axios.delete(`${API_BASE}/api/reports/delete-all/${farmer._id}`);
       setReports([]);
       setClearMsg("✅ All reports cleared successfully.");
       setTimeout(() => setClearMsg(""), 3000);
@@ -347,7 +348,7 @@ function History() {
 
                     {/* View AI report PDF */}
                     <a
-                      href={`http://localhost:5000/${report.generatedReport}`}
+                      href={`${API_BASE}/${report.generatedReport}`}
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 text-white py-2.5 rounded-xl text-xs font-semibold transition-all"
@@ -357,7 +358,7 @@ function History() {
 
                     {/* Download PDF */}
                     <a
-                      href={`http://localhost:5000/${report.generatedReport}`}
+                      href={`${API_BASE}/${report.generatedReport}`}
                       download
                       className="flex items-center justify-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold transition-all"
                     >

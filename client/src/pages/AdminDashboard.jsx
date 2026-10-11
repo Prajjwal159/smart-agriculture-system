@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
+import { API_BASE } from "../api";
 
 function AdminDashboard() {
 
@@ -19,11 +20,11 @@ function AdminDashboard() {
     try {
 
       const farmersResponse = await axios.get(
-        "http://localhost:5000/api/auth/farmers"
+        `${API_BASE}/api/auth/farmers`
       );
 
       const reportsResponse = await axios.get(
-        "http://localhost:5000/api/reports"
+        `${API_BASE}/api/reports`
       );
 
       setFarmers(farmersResponse.data);
