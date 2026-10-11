@@ -9,6 +9,21 @@ import {
 } from "react-icons/fa";
 import { API_BASE } from "../api";
 
+// ── Field wrapper defined OUTSIDE component so it never remounts on re-render ──
+function Field({ icon, children }) {
+  return (
+    <div className="relative">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">
+        {icon}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+const inputCls =
+  "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-green-300 text-sm";
+
 function Register() {
   const navigate = useNavigate();
 
@@ -18,11 +33,11 @@ function Register() {
     farmSize: "", cropType: "",
   });
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [error,   setError]     = useState("");
 
   const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -38,19 +53,6 @@ function Register() {
     }
   };
 
-  /* reusable input wrapper */
-  const Field = ({ icon, children }) => (
-    <div className="relative">
-      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">
-        {icon}
-      </span>
-      {children}
-    </div>
-  );
-
-  const inputCls =
-    "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-green-300 text-sm transition-all";
-
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
 
@@ -59,7 +61,6 @@ function Register() {
         <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-14 -left-14" />
         <div className="absolute w-48 h-48 bg-white/10 rounded-full bottom-8 right-0" />
 
-        {/* logo */}
         <div className="relative z-10 flex items-center gap-3">
           <div className="bg-white text-green-700 p-3 rounded-2xl shadow">
             <FaLeaf size={20} />
@@ -70,7 +71,6 @@ function Register() {
           </div>
         </div>
 
-        {/* hero */}
         <div className="relative z-10">
           <h2 className="text-3xl font-bold leading-snug mb-3">
             Start Your<br />Smart Farming Journey
@@ -79,10 +79,9 @@ function Register() {
             Join the AI-powered agriculture platform that helps farmers optimize
             fertilizer, improve yield, and monitor soil health.
           </p>
-
           <div className="mt-7 space-y-3">
             {[
-              { icon: <FaSeedling size={14} />, title: "Smart Soil Analysis",   sub: "AI-powered fertilizer optimization" },
+              { icon: <FaSeedling size={14} />, title: "Smart Soil Analysis",  sub: "AI-powered fertilizer optimization" },
               { icon: <FaCloudSun  size={14} />, title: "Weather Intelligence", sub: "Real-time farming insights" },
             ].map((f, i) => (
               <div key={i} className="flex items-center gap-3 bg-white/10 p-3 rounded-2xl">
@@ -115,7 +114,7 @@ function Register() {
               <h1 className="text-lg font-bold text-green-900">Smart Agro</h1>
             </div>
 
-            <h2 className="text-3xl font-bold text-green-900 mb-1">Create Account</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-green-900 mb-1">Create Account</h2>
             <p className="text-gray-400 text-sm mb-6">Register your smart farming profile</p>
 
             {error && (
@@ -126,18 +125,25 @@ function Register() {
 
             <form onSubmit={handleRegister} className="space-y-4">
 
-              {/* ── SECTION: Personal ── */}
               <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">Personal Info</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field icon={<FaUser />}>
-                  <input type="text" name="name" placeholder="Full Name"
-                    onChange={handleChange} required className={inputCls} />
+                  <input
+                    type="text" name="name" placeholder="Full Name"
+                    value={formData.name}
+                    onChange={handleChange} required
+                    className={inputCls}
+                  />
                 </Field>
 
                 <Field icon={<FaEnvelope />}>
-                  <input type="email" name="email" placeholder="Email Address"
-                    onChange={handleChange} required className={inputCls} />
+                  <input
+                    type="email" name="email" placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange} required
+                    className={inputCls}
+                  />
                 </Field>
 
                 {/* Password — spans both columns */}
@@ -148,47 +154,69 @@ function Register() {
                   <input
                     type={showPass ? "text" : "password"}
                     name="password" placeholder="Password"
+                    value={formData.password}
                     onChange={handleChange} required
                     className={`${inputCls} pr-11`}
                   />
-                  <button type="button" onClick={() => setShowPass(!showPass)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(p => !p)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
                     {showPass ? <FaEyeSlash size={13} /> : <FaEye size={13} />}
                   </button>
                 </div>
               </div>
 
-              {/* ── SECTION: Location ── */}
               <p className="text-xs font-semibold text-green-700 uppercase tracking-wide pt-1">Farm Location</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field icon={<FaMapMarkerAlt />}>
-                  <input type="text" name="village" placeholder="Village"
-                    onChange={handleChange} className={inputCls} />
+                  <input
+                    type="text" name="village" placeholder="Village"
+                    value={formData.village}
+                    onChange={handleChange}
+                    className={inputCls}
+                  />
                 </Field>
                 <Field icon={<FaMapMarkerAlt />}>
-                  <input type="text" name="district" placeholder="District"
-                    onChange={handleChange} className={inputCls} />
+                  <input
+                    type="text" name="district" placeholder="District"
+                    value={formData.district}
+                    onChange={handleChange}
+                    className={inputCls}
+                  />
                 </Field>
                 <Field icon={<FaMapMarkerAlt />}>
-                  <input type="text" name="state" placeholder="State"
-                    onChange={handleChange} className={inputCls} />
+                  <input
+                    type="text" name="state" placeholder="State"
+                    value={formData.state}
+                    onChange={handleChange}
+                    className={inputCls}
+                  />
                 </Field>
               </div>
 
-              {/* ── SECTION: Farm ── */}
               <p className="text-xs font-semibold text-green-700 uppercase tracking-wide pt-1">Farm Details</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field icon={<FaRulerCombined />}>
-                  <input type="number" name="farmSize" placeholder="Farm Size (Acres)"
-                    onChange={handleChange} className={inputCls} />
+                  <input
+                    type="number" name="farmSize" placeholder="Farm Size (Acres)"
+                    value={formData.farmSize}
+                    onChange={handleChange}
+                    className={inputCls}
+                  />
                 </Field>
 
                 <div className="relative">
                   <FaSeedling className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-                  <select name="cropType" onChange={handleChange}
-                    className={`${inputCls} appearance-none`}>
+                  <select
+                    name="cropType"
+                    value={formData.cropType}
+                    onChange={handleChange}
+                    className={`${inputCls} appearance-none`}
+                  >
                     <option value="">Select Crop Type</option>
                     <option value="Rice">Rice</option>
                     <option value="Paddy">Paddy</option>
@@ -203,7 +231,7 @@ function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-green-700 to-green-500 text-white py-3.5 rounded-xl font-semibold text-sm hover:opacity-90 hover:scale-[1.01] transition-all duration-200 shadow-lg mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-green-700 to-green-500 text-white py-3.5 rounded-xl font-semibold text-sm shadow-lg mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
