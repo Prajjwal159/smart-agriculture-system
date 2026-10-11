@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { motion } from "framer-motion";
 import {
   FaLeaf, FaSeedling, FaCloudSun,
   FaEnvelope, FaLock, FaUser, FaMapMarkerAlt,
@@ -99,13 +98,9 @@ function Register() {
       </div>
 
       {/* ── RIGHT PANEL ── */}
+      {/* No framer-motion wrapper — animation was blocking input clicks on laptop */}
       <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-xl py-4"
-        >
+        <div className="w-full max-w-xl py-4">
           <div className="bg-white border border-gray-100 shadow-xl rounded-3xl p-5 sm:p-8">
 
             {/* mobile logo */}
@@ -248,7 +243,7 @@ function Register() {
           <p className="text-center text-xs text-gray-400 mt-4">
             Your data is secure and encrypted
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
