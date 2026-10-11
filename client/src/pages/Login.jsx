@@ -93,7 +93,7 @@ function Login() {
           className="w-full max-w-md"
         >
           {/* CARD */}
-          <div className="bg-white/80 backdrop-blur-xl border border-white/30 shadow-xl rounded-3xl p-8">
+          <div className="bg-white border border-gray-100 shadow-xl rounded-3xl p-8">
 
             {/* MOBILE LOGO */}
             <div className="lg:hidden flex items-center gap-3 mb-6">

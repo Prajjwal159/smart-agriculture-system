@@ -49,7 +49,7 @@ function Register() {
   );
 
   const inputCls =
-    "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white/70 outline-none focus:ring-2 focus:ring-green-300 text-sm transition-all";
+    "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-green-300 text-sm transition-all";
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
@@ -107,7 +107,7 @@ function Register() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-xl py-4"
         >
-          <div className="bg-white/80 backdrop-blur-xl border border-white/30 shadow-xl rounded-3xl p-5 sm:p-8">
+          <div className="bg-white border border-gray-100 shadow-xl rounded-3xl p-5 sm:p-8">
 
             {/* mobile logo */}
             <div className="lg:hidden flex items-center gap-3 mb-5">
